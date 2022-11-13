@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class JoinLobby : MonoBehaviourPunCallbacks
+public class NetworkCallBacks : MonoBehaviourPunCallbacks
 {
     [SerializeField] private TMPro.TMP_InputField m_NameIpF;
     [SerializeField] private GameObject m_LoadingPnl;
@@ -16,6 +16,7 @@ public class JoinLobby : MonoBehaviourPunCallbacks
     private Dictionary<string, GameObject> listRoom = new Dictionary<string, GameObject>();
     public void Play()
     {
+        if(m_NameIpF.text == "")return;
         m_LoadingPnl.SetActive(true);
         m_InitPnl.SetActive(false);
         PhotonNetwork.ConnectUsingSettings();
@@ -32,6 +33,7 @@ public class JoinLobby : MonoBehaviourPunCallbacks
     {
         m_LobbyPnl.SetActive(true);
     }
+    #region Room
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         Debug.Log("Room List Updated");
@@ -69,6 +71,11 @@ public class JoinLobby : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log("Create Room successful");
-    }/*
-    public override void Crea*/
+        PhotonNetwork.LoadLevel("Main");
+    }
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Debug.Log(message);
+    }
+    #endregion
 }
