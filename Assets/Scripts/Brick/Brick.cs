@@ -9,8 +9,21 @@ public class Brick : MonoBehaviour
     {
         get => _shape;
     }
-    public  void Rotation()
+    private void Start()
+    {
+        
+    }
+
+    public void Rotation()
     {
 
+    }
+
+    public void setPositionByGrid(float gridSize)
+    {
+        foreach (Transform child in transform)
+        {
+            child.position *= gridSize;
+        }
     }
 }
