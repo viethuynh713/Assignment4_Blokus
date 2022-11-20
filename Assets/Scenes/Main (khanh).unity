@@ -381,7 +381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 375, y: 275}
+  m_AnchoredPosition: {x: 387, y: 275}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &616574084
@@ -738,7 +738,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 1
+  m_text: Player 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1075,7 +1075,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 1
+  m_text: Player 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1188,7 +1188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: 275}
+  m_AnchoredPosition: {x: 525, y: 275}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1202697334
@@ -1287,7 +1287,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 1
+  m_text: Player 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1477,7 +1477,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 250, y: 275}
+  m_AnchoredPosition: {x: 253, y: 275}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1769304853
@@ -1528,6 +1528,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1869161071}
   - component: {fileID: 1869161070}
+  - component: {fileID: 1869161072}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1577,32 +1578,32 @@ MonoBehaviour:
   - {fileID: 9006187818768773734, guid: 04d37ed3f972c1f4988280c6a908df1b, type: 3}
   - {fileID: 9006187818768773734, guid: 7f0774c760d50414b92f033029229550, type: 3}
   brickPosOnFieldList:
-  - {x: 7.7, y: 2.24}
-  - {x: 4.82, y: 1.32}
-  - {x: 6.4, y: 1.32}
-  - {x: 7.57, y: 1.12}
-  - {x: 9.05, y: 1.32}
-  - {x: 11, y: 1.59}
-  - {x: 4.78, y: 0.14}
-  - {x: 6.28, y: 0.14}
-  - {x: 7.54, y: 0}
-  - {x: 9.24, y: 0}
-  - {x: 10.67, y: 0}
-  - {x: 5.06, y: -1.52}
-  - {x: 6.4, y: -1.7}
-  - {x: 7.96, y: -1.7}
-  - {x: 9.55, y: -1.7}
-  - {x: 10.56, y: -1.56}
-  - {x: 4.89, y: -3.4}
-  - {x: 6.36, y: -3.1}
-  - {x: 7.91, y: -3.1}
-  - {x: 9.44, y: -3.1}
-  - {x: 10.36, y: -3.27}
+  - {x: 4.5, y: 2.5}
+  - {x: 1.75, y: 1.25}
+  - {x: 3.25, y: 1.25}
+  - {x: 4.25, y: 1.25}
+  - {x: 5.5, y: 1.25}
+  - {x: 7.5, y: 1.25}
+  - {x: 1.75, y: 0}
+  - {x: 3.25, y: 0}
+  - {x: 4.5, y: 0}
+  - {x: 6, y: 0}
+  - {x: 7.25, y: 0}
+  - {x: 1.75, y: -1.5}
+  - {x: 3.25, y: -1.5}
+  - {x: 4.75, y: -1.5}
+  - {x: 6.25, y: -1.5}
+  - {x: 7.25, y: -1.5}
+  - {x: 1.75, y: -3.25}
+  - {x: 3.25, y: -3}
+  - {x: 5, y: -3}
+  - {x: 6.5, y: -3}
+  - {x: 7.25, y: -3}
   tileSpriteList:
   - {fileID: 21300000, guid: 48eeedd592d9be34097169bf96b3bfaf, type: 3}
   - {fileID: 21300000, guid: 08561845957b245459109705b8ad8b20, type: 3}
   - {fileID: 21300000, guid: cf798e3f1266a33439dd3ebf3ef8c708, type: 3}
-  - {fileID: 21300000, guid: 48eeedd592d9be34097169bf96b3bfaf, type: 3}
+  - {fileID: 21300000, guid: 973b4729d8f12d547ad672ab18082953, type: 3}
 --- !u!4 &1869161071
 Transform:
   m_ObjectHideFlags: 0
@@ -1611,13 +1612,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1869161069}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 729.0881, y: 321.1899, z: 5.6666193}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1869161072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869161069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0ff2975ea4a7a469377f511eec6b5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blueBrick: {fileID: 21300000, guid: 48eeedd592d9be34097169bf96b3bfaf, type: 3}
+  greenBrick: {fileID: 21300000, guid: cf798e3f1266a33439dd3ebf3ef8c708, type: 3}
+  yellowBrick: {fileID: 21300000, guid: 08561845957b245459109705b8ad8b20, type: 3}
+  redBrick: {fileID: 21300000, guid: 973b4729d8f12d547ad672ab18082953, type: 3}
 --- !u!1 &1985354538
 GameObject:
   m_ObjectHideFlags: 0

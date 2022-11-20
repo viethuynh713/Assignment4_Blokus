@@ -12,9 +12,8 @@ public class GameManager : MonoBehaviour
     public readonly List<List<int>> BlokusMap = new List<List<int>>();
     public List<GameObject> BlokusPlayers = new List<GameObject>();
     public GameState State = GameState.INIT;
-    #region TitleMap
-    [SerializeField] private Grid _mainGrid;
 
+    [SerializeField] private Grid _mainGrid;
     [SerializeField] private int nPlayer = 4;
     [SerializeField] private string playerID;
     [SerializeField] private BrickColor playerColor; // get from server
@@ -22,7 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameObject> ListBricks;
     [SerializeField] private List<Vector2> brickPosOnFieldList;
     [SerializeField] private List<Sprite> tileSpriteList;
-    #endregion
+
     private void Awake()
     {
         instance = this;
@@ -49,6 +48,7 @@ public class GameManager : MonoBehaviour
         foreach (BrickColor iColor in colorList)
         {
             GameObject player = Instantiate(playerSample);
+            player.transform.SetParent(transform, false);
             player.GetComponent<Player>().Color = iColor;
             if (playerColor == iColor)
             {

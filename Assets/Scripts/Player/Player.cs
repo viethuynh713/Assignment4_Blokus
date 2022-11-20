@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,6 +44,7 @@ public class Player : MonoBehaviour
         for (int i = 0; i < brickList.Count; i++)
         {
             GameObject brick = Instantiate(brickList[i], brickPosOnFieldList[i], Quaternion.identity);
+            brick.transform.SetParent(transform, false);
             brick.GetComponent<Brick>().setPositionByGrid(gridSize);
             foreach (Transform child in brick.transform)
             {
