@@ -5,36 +5,52 @@ using UnityEngine.Tilemaps;
 
 public class Board : MonoBehaviour
 {
-    public int size { get; set; }
     [SerializeField] private Tilemap _boardMap;
     [SerializeField] private TileBase _ground;
-    //[SerializeField] private TileBase _wall;
+    [SerializeField] private TileBase _wall;
     [SerializeField] private TileBase _redBrick;
     [SerializeField] private TileBase _blueBrick;
     [SerializeField] private TileBase _greenBrick;
     [SerializeField] private TileBase _yellowBrick;
+    [SerializeField] private Grid _mainGrid;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        size = 20;
-        initMap();
-    }
+    public List<int> BlokusMap;
 
-    // Update is called once per frame
-    void Update()
+    private int _size;
+    public void initMap()
     {
-        
-    }
-
-    void initMap()
-    {
-        for (int i = -size / 2; i < size / 2; i++)
+        BlokusMap = new List<int>();
+        _size = GameManager.Instance.BoardSize;
+        for (int i = -_size / 2; i < _size / 2; i++)
         {
-            for (int j = -size / 2; j < size / 2; j++)
+            for (int j = -_size / 2; j < _size / 2; j++)
             {
                 _boardMap.SetTile(new Vector3Int(i, j), _ground);
             }
         }
+    }
+
+     private TileBase GetTileOfPlayer(Player player) {
+        switch (player.Color) {
+            case BrickColor.BLUE:
+                return _blueBrick;
+            case BrickColor.YELLOW:
+                return _yellowBrick;
+            case BrickColor.RED:
+                return _redBrick;
+            case BrickColor.GREEN:
+                return _greenBrick;
+            default:
+                return null;
+        }
+    }
+    public int PlaceBrick(List<Vector2> pos, BrickColor color,Vector2 mousePos)
+    {
+
+        return 0;
+    }
+    public bool ValidateBrick(List<Vector2> pos)
+    {
+        return true;
     }
 }

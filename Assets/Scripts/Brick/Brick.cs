@@ -24,6 +24,7 @@ public class Brick : MonoBehaviour
         foreach (Transform child in transform)
         {
             child.position *= gridSize;
+            _shape.Add(child.position);
         }
     }
 }
