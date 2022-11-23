@@ -58,17 +58,20 @@ public class Board : MonoBehaviour
 
     public bool placeBrick(GameObject brick, Vector2 worldPosition)
     {
-        if (isBrickOnBoard(brick, worldPosition))
+        if (FindObjectOfType<GameManager>().isMyTurn())
         {
-            Vector2Int gridPos = worldToGridPositon(worldPosition, false);
-            foreach (Transform child in brick.transform)
+            if (isBrickOnBoard(brick, worldPosition))
             {
-                Vector3Int tilePosOnGrid = (Vector3Int)gridPos + (Vector3Int)worldToGridPositon(child.localPosition, true);
-                _boardMap.SetTile(tilePosOnGrid, _greenBrick);
-                Vector2Int tilePosOnGridLogic = gridViewPosToGridLogicPos((Vector2Int)tilePosOnGrid);
-                boardLogic[tilePosOnGridLogic.x][tilePosOnGridLogic.y] = BrickColor.GREEN;
+                Vector2Int gridPos = worldToGridPositon(worldPosition, false);
+                foreach (Transform child in brick.transform)
+                {
+                    Vector3Int tilePosOnGrid = (Vector3Int)gridPos + (Vector3Int)worldToGridPositon(child.localPosition, true);
+                    _boardMap.SetTile(tilePosOnGrid, _greenBrick);
+                    Vector2Int tilePosOnGridLogic = gridViewPosToGridLogicPos((Vector2Int)tilePosOnGrid);
+                    boardLogic[tilePosOnGridLogic.x][tilePosOnGridLogic.y] = BrickColor.GREEN;
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }

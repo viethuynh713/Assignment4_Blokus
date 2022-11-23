@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     private const int SIZE = 20;
+    private int turn;
 
     public readonly List<List<int>> BlokusMap = new List<List<int>>();
     public List<GameObject> BlokusPlayers = new List<GameObject>();
@@ -22,28 +24,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Vector2> brickPosOnFieldList;
     [SerializeField] private List<Sprite> tileSpriteList;
 
+    List<BrickColor> colorList;
+
     private void Awake()
     {
         instance = this;
     }
     private void Start()
     {
-        List<BrickColor> colorList;
         colorList = new List<BrickColor>();
-        switch (nPlayer)
+        BrickColor[] colorListSample = new BrickColor[4] { BrickColor.BLUE, BrickColor.YELLOW, BrickColor.GREEN, BrickColor.RED };
+        for (int i = 0; i < nPlayer; i++)
         {
-            case 2:
-                colorList.Add(BrickColor.BLUE);
-                colorList.Add(BrickColor.GREEN);
-                break;
-            case 4:
-                colorList.Add(BrickColor.BLUE);
-                colorList.Add(BrickColor.YELLOW);
-                colorList.Add(BrickColor.GREEN);
-                colorList.Add(BrickColor.RED);
-                break;
-            default:
-                break;
+            colorList.Add(colorListSample[i]);
         }
         foreach (BrickColor iColor in colorList)
         {
@@ -61,6 +54,9 @@ public class GameManager : MonoBehaviour
             player.GetComponent<Player>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
         }
+        turn = 0;
+        FindObjectOfType<GameUI>().initPlayerPanelList(nPlayer);
+        BlokusPlayers[turn].GetComponent<Player>().Play();
     }
     private void Update()
     {
@@ -69,6 +65,22 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void SwitchPlayer()
     {
+        turn++;
+        if (turn == nPlayer)
+        {
+            turn = 0;
+        }
+        BlokusPlayers[turn].GetComponent<Player>().Play();
+        FindObjectOfType<GameUI>().switchPlayerUI(turn);
+    }
 
+    public bool isMyTurn()
+    {
+        // ???
+        if (colorList[turn] == playerColor)
+        {
+            return true;
+        }
+        return false;
     }
 }

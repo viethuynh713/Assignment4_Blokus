@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
     private bool isMyPlayer;
     public bool IsMyPlayer { get => isMyPlayer; set { isMyPlayer = value; } }
 
+    private bool isAI;
+    public bool IsAI { get => isMyPlayer; set { isMyPlayer = value; } }
+
     public Player(string iD, string name, BrickColor color)
     {
         ID = iD;
@@ -31,6 +34,12 @@ public class Player : MonoBehaviour
     void Start()
     {
         ListBricks = new List<GameObject>();
+    }
+
+    public void Play()
+    {
+        IsMyTurn = true;
+        StartCoroutine(delay(5));
     }
 
     [PunRPC]
@@ -56,5 +65,12 @@ public class Player : MonoBehaviour
             }
             ListBricks.Add(brick);
         }
+    }
+
+    IEnumerator delay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        IsMyTurn = false;
+        FindObjectOfType<GameManager>().SwitchPlayer();
     }
 }
