@@ -1,9 +1,12 @@
+using Photon.Pun.Demo.Procedural;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class Board : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class Board : MonoBehaviour
     [SerializeField] private TileBase _yellowBrick;
 
     List<List<BrickColor>> boardLogic;
+    public List<List<BrickColor>> BoardLogic { get => boardLogic; }
 
     // Start is called before the first frame update
     void Start()
@@ -63,17 +67,32 @@ public class Board : MonoBehaviour
             if (isBrickOnBoard(brick, worldPosition))
             {
                 Vector2Int gridPos = worldToGridPositon(worldPosition, false);
-                foreach (Transform child in brick.transform)
+                foreach (Transform tile in brick.transform)
                 {
-                    Vector3Int tilePosOnGrid = (Vector3Int)gridPos + (Vector3Int)worldToGridPositon(child.localPosition, true);
-                    _boardMap.SetTile(tilePosOnGrid, _greenBrick);
+                    Sprite tileSprite = tile.gameObject.GetComponent<SpriteRenderer>().sprite;
+                    Vector3Int tilePosOnGrid = (Vector3Int)gridPos + (Vector3Int)worldToGridPositon(tile.localPosition, true);
+                    _boardMap.SetTile(tilePosOnGrid, getTileBase(tileSprite));
                     Vector2Int tilePosOnGridLogic = gridViewPosToGridLogicPos((Vector2Int)tilePosOnGrid);
-                    boardLogic[tilePosOnGridLogic.x][tilePosOnGridLogic.y] = BrickColor.GREEN;
+                    boardLogic[tilePosOnGridLogic.x][tilePosOnGridLogic.y] = getColor(tileSprite);
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    public void placeBrickByAI(GameObject brick, Vector2Int logicPos, BrickColor color)
+    {
+        Vector3Int brickPosOnGrid = (Vector3Int)gridLogicPosToGridViewPos(logicPos);
+        foreach (Transform tile in brick.transform)
+        {
+            Sprite tileSprite = tile.gameObject.GetComponent<SpriteRenderer>().sprite;
+            Vector2Int tilePosByBrickOnGrid = worldToGridPositon(tile.localPosition, true);
+            Vector3Int tilePosOnGrid = brickPosOnGrid + (Vector3Int)tilePosByBrickOnGrid;
+            _boardMap.SetTile(tilePosOnGrid, getTileBase(color));
+            Vector2Int tilePosOnLogic = logicPos + tilePosByBrickOnGrid;
+            boardLogic[tilePosOnLogic.x][tilePosOnLogic.y] = color;
+        }
     }
 
     bool isBrickOnBoard(GameObject brick, Vector2 worldPosition)
@@ -86,7 +105,6 @@ public class Board : MonoBehaviour
                 return false;
             }
         }
-        //return true;
         return isBrickPlacedValid(brick, gridPos);
     }
 
@@ -103,14 +121,23 @@ public class Board : MonoBehaviour
 
     bool isBrickPlacedValid(GameObject brick, Vector2Int brickPosOnGrid)
     {
+        Vector2Int brickPosOnGridLogic = gridViewPosToGridLogicPos(brickPosOnGrid);
+        BrickColor color = getColor(brick.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite);
+        return isBrickPlacedValidOnLogic(brick, brickPosOnGridLogic, color);
+    }
+
+    public bool isBrickPlacedValidOnLogic(GameObject brick, Vector2Int brickPosOnGridLogic, BrickColor color)
+    {
         bool isAdjacentWithCorner = false;
         foreach (Transform tile in brick.transform)
         {
-            BrickColor color = getColor(tile.GetComponent<SpriteRenderer>().sprite);
-            Vector2Int tilePosOnGrid = brickPosOnGrid + worldToGridPositon(tile.localPosition, true);
-            Vector2Int tilePosOnGridLogic = gridViewPosToGridLogicPos(tilePosOnGrid);
+            Vector2Int tilePosOnGridLogic = brickPosOnGridLogic + worldToGridPositon(tile.localPosition, true);
             int i = tilePosOnGridLogic.x;
             int j = tilePosOnGridLogic.y;
+            if (i < 1 || i >= boardLogic.Count - 1 || j < 1 || j >= boardLogic[0].Count - 1)
+            {
+                return false;
+            }
             if (boardLogic[i][j] != BrickColor.NONE)
             {
                 return false;
@@ -129,15 +156,50 @@ public class Board : MonoBehaviour
         return isAdjacentWithCorner;
     }
 
-    Vector2Int worldToGridPositon(Vector2 worldPosition, bool hasParent)
+    public bool isTilePlacedValid(Vector2Int logicPos, BrickColor color)
+    {
+        int i = logicPos.x;
+        int j = logicPos.y;
+        if (boardLogic[i][j] != BrickColor.NONE)
+        {
+            return false;
+        }
+        if (boardLogic[i - 1][j] == color || boardLogic[i + 1][j] == color
+            || boardLogic[i][j - 1] == color || boardLogic[i][j + 1] == color)
+        {
+            return false;
+        }
+        if (boardLogic[i - 1][j - 1] == color || boardLogic[i - 1][j + 1] == color
+            || boardLogic[i + 1][j - 1] == color || boardLogic[i + 1][j + 1] == color)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public Vector2Int worldToGridPositon(Vector2 worldPosition, bool isTile)
     {
         Vector2 gridPosition = worldPosition;
-        if (!hasParent)
+        if (!isTile)
         {
             gridPosition -= (Vector2)transform.position;
         }
         int x = Mathf.RoundToInt(gridPosition.x / _boardMap.cellSize.x);
         int y = Mathf.RoundToInt(gridPosition.y / _boardMap.cellSize.y);
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2Int gridViewPosToGridLogicPos(Vector2Int gridViewPos)
+    {
+        int x = gridViewPos.x + size / 2 + 1;
+        int y = gridViewPos.y + size / 2 + 1;
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2Int gridLogicPosToGridViewPos(Vector2Int gridLogicPos)
+    {
+        int x = gridLogicPos.x - 1 - size / 2;
+        int y = gridLogicPos.y - 1 - size / 2;
         return new Vector2Int(x, y);
     }
 
@@ -162,10 +224,45 @@ public class Board : MonoBehaviour
         return BrickColor.NONE;
     }
 
-    public Vector2Int gridViewPosToGridLogicPos(Vector2Int gridViewPos)
+    public TileBase getTileBase(Sprite sprite)
     {
-        int x = gridViewPos.x + size / 2 + 1;
-        int y = gridViewPos.y + size / 2 + 1;
-        return new Vector2Int(x, y);
+        if (sprite == FindObjectOfType<Constant>().blueBrick)
+        {
+            return _blueBrick;
+        }
+        if (sprite == FindObjectOfType<Constant>().yellowBrick)
+        {
+            return _yellowBrick;
+        }
+        if (sprite == FindObjectOfType<Constant>().greenBrick)
+        {
+            return _greenBrick;
+        }
+        if (sprite == FindObjectOfType<Constant>().redBrick)
+        {
+            return _redBrick;
+        }
+        return _ground;
+    }
+
+    public TileBase getTileBase(BrickColor color)
+    {
+        if (color == BrickColor.BLUE)
+        {
+            return _blueBrick;
+        }
+        if (color == BrickColor.YELLOW)
+        {
+            return _yellowBrick;
+        }
+        if (color == BrickColor.GREEN)
+        {
+            return _greenBrick;
+        }
+        if (color == BrickColor.RED)
+        {
+            return _redBrick;
+        }
+        return _ground;
     }
 }

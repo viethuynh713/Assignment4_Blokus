@@ -22,7 +22,7 @@ public class Brick : MonoBehaviour
         {
             if (isMouseOn())
             {
-                Rotation();
+                Rotate();
             }
         }
         else if (Input.GetMouseButtonUp(0))
@@ -37,6 +37,9 @@ public class Brick : MonoBehaviour
                 if (isSelected)
                 {
                     if (FindObjectOfType<Board>().placeBrick(gameObject, Camera.main.ScreenToWorldPoint(Input.mousePosition))) {
+                        Player myPlayerComponent = FindObjectOfType<GameManager>().getMyPlayer().GetComponent<Player>();
+                        myPlayerComponent.switchToNextTurn();
+                        myPlayerComponent.removeBrick(gameObject);
                         Destroy(gameObject);
                     }
                     else
@@ -49,7 +52,7 @@ public class Brick : MonoBehaviour
         }
     }
 
-    public void Rotation()
+    public void Rotate()
     {
         foreach (Transform child in transform)
         {
@@ -87,5 +90,16 @@ public class Brick : MonoBehaviour
             }
         }
        
+    }
+
+    public void removeSelf()
+    {
+        StartCoroutine(waitForRemoveSelf());
+    }
+
+    IEnumerator waitForRemoveSelf()
+    {
+        yield return new WaitForSeconds(0.05f);
+        Destroy(gameObject);
     }
 }

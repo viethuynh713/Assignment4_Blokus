@@ -40,7 +40,6 @@ public class GameUI : MonoBehaviour
 
     public void switchPlayerUI(int turn)
     {
-        Debug.Log(turn);
         if (turn == 0)
         {
             playerPanelList[playerPanelList.Count - 1].GetComponent<Image>().color = darkColor;
@@ -50,5 +49,13 @@ public class GameUI : MonoBehaviour
             playerPanelList[turn - 1].GetComponent<Image>().color = darkColor;
         }
         playerPanelList[turn].GetComponent<Image>().color = playerPanelColorList[turn];
+    }
+
+    public void printResult(List<int> rank)
+    {
+        for (int i = 0; i < playerPanelList.Count; i++)
+        {
+            playerPanelList[i].transform.GetChild(1).gameObject.GetComponent<Text>().text = rank[i].ToString();
+        }
     }
 }
