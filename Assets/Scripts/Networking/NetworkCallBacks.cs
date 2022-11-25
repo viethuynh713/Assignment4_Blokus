@@ -13,6 +13,19 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject m_roomUIPrefab;
     [SerializeField] private Transform m_roomParent;
 
+private void Start() {
+    if(PhotonNetwork.IsConnected)
+    {
+        m_LobbyPnl.SetActive(true);
+        m_InitPnl.SetActive(false);
+        m_NameIpF.text = PhotonNetwork.LocalPlayer.NickName;
+    }
+    else
+    {
+        m_LobbyPnl.SetActive(false);
+        m_InitPnl.SetActive(true);
+    }
+}
     private Dictionary<string, GameObject> listRoom = new Dictionary<string, GameObject>();
     public void Play()
     {
@@ -25,7 +38,10 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     {
         m_LoadingPnl.SetActive(false);
         Debug.Log("Connect successful");
+    if(PhotonNetwork.IsConnected)
+    {
         PhotonNetwork.LocalPlayer.NickName = m_NameIpF.text;
+    }
         PhotonNetwork.JoinLobby();
         Debug.Log("Hello "+PhotonNetwork.LocalPlayer.NickName);
     }
