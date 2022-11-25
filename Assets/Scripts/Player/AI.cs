@@ -18,6 +18,12 @@ public class AI : MonoBehaviour
             pos = FindObjectOfType<Constant>().nullVector;
             point = FindObjectOfType<Constant>().negativeInf;
         }
+        public Move(Move move)
+        {
+            brick = move.brick;
+            pos = move.pos;
+            point = move.point;
+        }
         public bool isNull()
         {
             return brick == null;
@@ -77,7 +83,8 @@ public class AI : MonoBehaviour
         board = FindObjectOfType<Board>().BoardLogic;
         ListBricks = GetComponent<Player>().ListBricks;
         colorList = FindObjectOfType<GameManager>().getPlayerColorList();
-        Move move = calcMove(1, color, board);
+        int depth = 2;
+        Move move = calcMove(depth, color, board, new Move(), depth);
         if (move.isNull())
         {
             GetComponent<Player>().pass();
@@ -89,7 +96,7 @@ public class AI : MonoBehaviour
         }
     }
 
-    Move calcMove(int depth, BrickColor color, List<List<BrickColor>> board)
+    Move calcMove(int depth, BrickColor color, List<List<BrickColor>> board, Move mainMove, int h)
     {
         Move move = new Move();
         for (int i = 1; i < board.Count - 1; i++)
@@ -108,12 +115,22 @@ public class AI : MonoBehaviour
                                 List<List<BrickColor>> boardClone = placeBrickToTest(brick, brickPos, board);
                                 if (depth > 1)
                                 {
-                                    Move subMove = calcMove(depth - 1, getNextColor(color), boardClone);
+                                    if (depth == h)
+                                    {
+                                        mainMove.brick = brick;
+                                        mainMove.pos = brickPos;
+                                    }
+                                    Move subMove = calcMove(depth - 1, getNextColor(color), boardClone, mainMove, h);
                                     move.checkPoint(subMove, color == this.color);
                                 }
                                 else
                                 {
                                     move.checkPoint(brick, brickPos, calcPoint(boardClone), color == this.color);
+                                    if (depth == h)
+                                    {
+                                        mainMove.brick = move.brick;
+                                        mainMove.pos = move.pos;
+                                    }
                                 }
                             }
                         }
@@ -121,7 +138,7 @@ public class AI : MonoBehaviour
                 }
             }
         }
-        return move;
+        return mainMove;
     }
 
     List<List<BrickColor>> placeBrickToTest(GameObject brick, Vector2Int brickPos, List<List<BrickColor>> board)
