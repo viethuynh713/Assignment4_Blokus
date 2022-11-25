@@ -50,4 +50,12 @@ public class GameUI : MonoBehaviour
         }
         playerPanelList[turn].GetComponent<Image>().color = playerPanelColorList[turn];
     }
+
+    public void printResult(List<int> rank)
+    {
+        for (int i = 0; i < playerPanelList.Count; i++)
+        {
+            playerPanelList[i].transform.GetChild(1).gameObject.GetComponent<Text>().text = rank[i].ToString();
+        }
+    }
 }

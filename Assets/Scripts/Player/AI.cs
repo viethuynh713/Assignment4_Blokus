@@ -1,6 +1,7 @@
 using Photon.Pun.Demo.Procedural;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -21,14 +22,30 @@ public class AI : MonoBehaviour
         {
             return brick == null;
         }
-        public void checkPoint(GameObject brick, Vector2Int pos, int point)
+        public void checkPoint(GameObject brick, Vector2Int pos, int point, bool isMax)
         {
-            if (point > this.point)
+            if (isMax)
             {
-                this.brick = brick;
-                this.pos = pos;
-                this.point = point;
+                if (brick == null || point >= this.point)
+                {
+                    this.brick = brick;
+                    this.pos = pos;
+                    this.point = point;
+                }
             }
+            else
+            {
+                if (brick == null || point <= this.point)
+                {
+                    this.brick = brick;
+                    this.pos = pos;
+                    this.point = point;
+                }
+            }
+        }
+        public void checkPoint(Move move, bool isMax)
+        {
+            checkPoint(move.brick, move.pos, move.point, isMax);
         }
     }
 
@@ -36,6 +53,7 @@ public class AI : MonoBehaviour
     List<GameObject> ListBricks;
     BrickColor color;
     Board boardComponent;
+    List<BrickColor> colorList;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,15 +76,20 @@ public class AI : MonoBehaviour
     {
         board = FindObjectOfType<Board>().BoardLogic;
         ListBricks = GetComponent<Player>().ListBricks;
-        Move move = calcMove();
-        if (!move.isNull())
+        colorList = FindObjectOfType<GameManager>().getPlayerColorList();
+        Move move = calcMove(1, color, board);
+        if (move.isNull())
+        {
+            GetComponent<Player>().pass();
+        }
+        else
         {
             boardComponent.placeBrickByAI(move.brick, move.pos, color);
             GetComponent<Player>().removeBrick(move.brick);
         }
     }
 
-    Move calcMove()
+    Move calcMove(int depth, BrickColor color, List<List<BrickColor>> board)
     {
         Move move = new Move();
         for (int i = 1; i < board.Count - 1; i++)
@@ -82,7 +105,16 @@ public class AI : MonoBehaviour
                             Vector2Int brickPos = new Vector2Int(i, j) - boardComponent.worldToGridPositon(tile.localPosition, true);
                             if (boardComponent.isBrickPlacedValidOnLogic(brick, brickPos, color))
                             {
-                                move.checkPoint(brick, brickPos, calcPoint(brick, brickPos));
+                                List<List<BrickColor>> boardClone = placeBrickToTest(brick, brickPos, board);
+                                if (depth > 1)
+                                {
+                                    Move subMove = calcMove(depth - 1, getNextColor(color), boardClone);
+                                    move.checkPoint(subMove, color == this.color);
+                                }
+                                else
+                                {
+                                    move.checkPoint(brick, brickPos, calcPoint(boardClone), color == this.color);
+                                }
                             }
                         }
                     }
@@ -92,7 +124,7 @@ public class AI : MonoBehaviour
         return move;
     }
 
-    int calcPoint(GameObject brick, Vector2Int brickPos)
+    List<List<BrickColor>> placeBrickToTest(GameObject brick, Vector2Int brickPos, List<List<BrickColor>> board)
     {
         List<List<BrickColor>> boardClone = new List<List<BrickColor>>();
         foreach (List<BrickColor> row in board)
@@ -104,6 +136,11 @@ public class AI : MonoBehaviour
             Vector2Int tilePosOnGrid = brickPos + boardComponent.worldToGridPositon(tile.localPosition, true);
             boardClone[tilePosOnGrid.x][tilePosOnGrid.y] = color;
         }
+        return boardClone;
+    }
+
+    int calcPoint(List<List<BrickColor>> boardClone)
+    {
         int point = 0;
         for (int i = 1; i < boardClone.Count - 1; i++)
         {
@@ -128,8 +165,19 @@ public class AI : MonoBehaviour
         return point;
     }
 
-    void placeBrick(GameObject brick, Vector2Int pos)
+    BrickColor getNextColor(BrickColor color)
     {
-
+        for (int i = 0; i < colorList.Count; i++)
+        {
+            if (colorList[i] == color)
+            {
+                if (i == colorList.Count - 1)
+                {
+                    return colorList[0];
+                }
+                return colorList[i + 1];
+            }
+        }
+        return BrickColor.NONE;
     }
 }

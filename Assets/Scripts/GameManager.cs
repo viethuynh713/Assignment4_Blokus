@@ -57,14 +57,21 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void SwitchPlayer()
     {
-        turn++;
-        if (turn == nPlayer)
+        if (isEndGame())
         {
-            turn = 0;
+            endGame();
         }
-        Debug.Log("SwitchPlayer: " + turn);
-        FindObjectOfType<GameUI>().switchPlayerUI(turn);
-        BlokusPlayers[turn].GetComponent<Player>().Play();
+        else
+        {
+            turn++;
+            if (turn == nPlayer)
+            {
+                turn = 0;
+            }
+            Debug.Log("SwitchPlayer: " + turn);
+            FindObjectOfType<GameUI>().switchPlayerUI(turn);
+            BlokusPlayers[turn].GetComponent<Player>().Play();
+        }
     }
 
     public bool isMyTurn()
@@ -91,12 +98,74 @@ public class GameManager : MonoBehaviour
 
     public List<BrickColor> getPlayerColorList()
     {
-        List<BrickColor> playerColorList = new List<BrickColor>();
-        BrickColor[] colorListSample = new BrickColor[4] { BrickColor.BLUE, BrickColor.YELLOW, BrickColor.GREEN, BrickColor.RED };
-        for (int i = 0; i < nPlayer; i++)
+        return colorList;
+    }
+
+    public void passTurn()
+    {
+        if (isMyTurn())
         {
-            playerColorList.Add(colorListSample[i]);
+            getMyPlayer().GetComponent<Player>().pass();
         }
-        return playerColorList;
+    }
+
+    public bool isEndGame()
+    {
+        foreach (GameObject blokusPlayer in BlokusPlayers)
+        {
+            if (!blokusPlayer.GetComponent<Player>().IsPassed)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void endGame()
+    {
+        // get point
+        List<int> order = new List<int>();
+        List<int> pointList = new List<int>();
+        for (int i = 0; i < BlokusPlayers.Count; i++)
+        {
+            order.Add(i);
+            pointList.Add(BlokusPlayers[i].GetComponent<Player>().calcPoint());
+        }
+        // sort point
+        bool hasResult = false;
+        do
+        {
+            hasResult = true;
+            for (int i = 0; i < order.Count - 1; i++)
+            {
+                if (pointList[order[i]] < pointList[order[i + 1]])
+                {
+                    hasResult = false;
+                    int t = order[i];
+                    order[i] = order[i + 1];
+                    order[i + 1] = t;
+                }
+            }
+        }
+        while (!hasResult);
+        // get result
+        List<int> result = new List<int>();
+        foreach (int idx in order)
+        {
+            result.Add(0);
+        }
+        int lowestRank = 1;
+        for (int i = 0; i < order.Count; i++)
+        {
+            if (i > 0)
+            {
+                if (pointList[order[i]] != pointList[order[i - 1]])
+                {
+                    lowestRank++;
+                }
+            }
+            result[order[i]] = lowestRank;
+        }
+        FindObjectOfType<GameUI>().printResult(result);
     }
 }

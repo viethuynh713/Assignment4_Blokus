@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     private BrickColor color;
     public BrickColor Color { get => color; set { color = value; } }
 
+    private bool isPassed;
+    public bool IsPassed { get => isPassed; set { isPassed = value; } }
+
     private bool _isMyTurn = false;
     public bool IsMyTurn { get => _isMyTurn; set { _isMyTurn = value; } }
 
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour
     public void init(BrickColor color, BrickColor myColor, bool isAI)
     {
         this.color = color;
+        isPassed = false;
         if (myColor == color)
         {
             isMyPlayer = true;
@@ -62,7 +66,14 @@ public class Player : MonoBehaviour
         IsMyTurn = true;
         if (isAI)
         {
-            GetComponent<AI>().play();
+            if (!isPassed)
+            {
+                GetComponent<AI>().play();
+            }
+            switchToNextTurn();
+        }
+        else if (isPassed)
+        {
             switchToNextTurn();
         }
     }
@@ -96,14 +107,20 @@ public class Player : MonoBehaviour
 
     public void switchToNextTurn()
     {
+        IsMyTurn = false;
         StartCoroutine(WaitForSwitchToNextTurn());
     }
     
     IEnumerator WaitForSwitchToNextTurn()
     {
         yield return new WaitForSeconds(1);
-        IsMyTurn = false;
         FindObjectOfType<GameManager>().SwitchPlayer();
+    }
+
+    public void pass()
+    {
+        isPassed = true;
+        switchToNextTurn();
     }
 
     public void removeBrick(GameObject brick)
@@ -113,5 +130,15 @@ public class Player : MonoBehaviour
             ListBricks.Remove(brick);
             //brick.GetComponent<Brick>().removeSelf();
         }
+    }
+
+    public int calcPoint()
+    {
+        int point = 0;
+        foreach (GameObject brick in ListBricks)
+        {
+            point += brick.transform.childCount;
+        }
+        return point;
     }
 }
