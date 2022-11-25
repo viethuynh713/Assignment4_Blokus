@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     private const int SIZE = 20;
     private int turn;
-
-    public readonly List<List<int>> BlokusMap = new List<List<int>>();
     public List<GameObject> BlokusPlayers = new List<GameObject>();
     public GameState State = GameState.INIT;
 

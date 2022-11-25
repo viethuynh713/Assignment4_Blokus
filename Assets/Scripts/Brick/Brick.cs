@@ -86,5 +86,6 @@ public class Brick : MonoBehaviour
                 child.GetComponent<SpriteRenderer>().color = Color.white;
             }
         }
+       
     }
 }

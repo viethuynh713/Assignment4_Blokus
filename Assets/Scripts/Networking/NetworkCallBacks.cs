@@ -71,7 +71,11 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log("Create Room successful");
-        PhotonNetwork.LoadLevel("Main");
+        PhotonNetwork.LoadLevel("Main_Viet");
+    }
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("Main_Viet");
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
