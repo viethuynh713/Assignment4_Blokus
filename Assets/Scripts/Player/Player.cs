@@ -2,6 +2,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -22,7 +24,7 @@ public class Player : MonoBehaviour
     public bool IsMyPlayer { get => isMyPlayer; set { isMyPlayer = value; } }
 
     private bool isAI;
-    public bool IsAI { get => isMyPlayer; set { isMyPlayer = value; } }
+    public bool IsAI { get => isAI; set { isAI = value; } }
 
     public Player(string iD, string name, BrickColor color)
     {
@@ -33,13 +35,36 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        ListBricks = new List<GameObject>();
+        
+    }
+
+    public void init(BrickColor color, BrickColor myColor, bool isAI)
+    {
+        this.color = color;
+        if (myColor == color)
+        {
+            isMyPlayer = true;
+        }
+        else
+        {
+            isMyPlayer = false;
+        }
+        this.isAI = isAI;
+        if (this.isAI)
+        {
+            this.AddComponent<AI>();
+            GetComponent<AI>().init(color);
+        }
     }
 
     public void Play()
     {
         IsMyTurn = true;
-        StartCoroutine(delay(5));
+        if (isAI)
+        {
+            GetComponent<AI>().play();
+            switchToNextTurn();
+        }
     }
 
     [PunRPC]
@@ -50,6 +75,7 @@ public class Player : MonoBehaviour
 
     public void initBrickOnField(List<GameObject> brickList, List<Vector2> brickPosOnFieldList, Sprite sprite, float gridSize)
     {
+        ListBricks = new List<GameObject>();
         for (int i = 0; i < brickList.Count; i++)
         {
             GameObject brick = Instantiate(brickList[i], brickPosOnFieldList[i], Quaternion.identity);
@@ -65,12 +91,27 @@ public class Player : MonoBehaviour
             }
             ListBricks.Add(brick);
         }
+        Debug.Log("ListBricks: " + ListBricks.Count + ", " + color);
     }
 
-    IEnumerator delay(float time)
+    public void switchToNextTurn()
     {
-        yield return new WaitForSeconds(time);
+        StartCoroutine(WaitForSwitchToNextTurn());
+    }
+    
+    IEnumerator WaitForSwitchToNextTurn()
+    {
+        yield return new WaitForSeconds(1);
         IsMyTurn = false;
         FindObjectOfType<GameManager>().SwitchPlayer();
+    }
+
+    public void removeBrick(GameObject brick)
+    {
+        if (brick != null)
+        {
+            ListBricks.Remove(brick);
+            //brick.GetComponent<Brick>().removeSelf();
+        }
     }
 }

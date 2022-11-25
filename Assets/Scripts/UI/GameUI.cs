@@ -40,7 +40,6 @@ public class GameUI : MonoBehaviour
 
     public void switchPlayerUI(int turn)
     {
-        Debug.Log(turn);
         if (turn == 0)
         {
             playerPanelList[playerPanelList.Count - 1].GetComponent<Image>().color = darkColor;

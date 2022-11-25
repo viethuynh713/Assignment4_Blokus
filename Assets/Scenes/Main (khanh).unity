@@ -803,6 +803,8 @@ MonoBehaviour:
   greenBrick: {fileID: 21300000, guid: cf798e3f1266a33439dd3ebf3ef8c708, type: 3}
   yellowBrick: {fileID: 21300000, guid: 08561845957b245459109705b8ad8b20, type: 3}
   redBrick: {fileID: 21300000, guid: 973b4729d8f12d547ad672ab18082953, type: 3}
+  negativeInf: -99999999
+  nullVector: {x: -99999999, y: -99999999}
 --- !u!1 &1985354538
 GameObject:
   m_ObjectHideFlags: 0
