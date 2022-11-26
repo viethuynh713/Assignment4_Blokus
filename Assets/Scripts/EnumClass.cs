@@ -6,7 +6,7 @@ public enum BrickColor
     YELLOW,
     GREEN,
     RED,
-    NONE
+    NONE,
 }
 public enum GameState
 {

@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3641182176850843491}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e23426c841c19ef428a0e47c10d94be8, type: 3}
+  m_Script: {fileID: 11500000, guid: 2dfe7f4eed9f91544891377291f6c8dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 
-  Name: 
-  color: 0
+  ID: 11
+  Name: 11
   ListBricks:
   - {fileID: 9006187818768773734, guid: dfbb74abc6f4b8a4c80894c02c09f5f3, type: 3}
   - {fileID: 9006187818768773734, guid: e09ffa25bb82e08419e44b387f7684cf, type: 3}

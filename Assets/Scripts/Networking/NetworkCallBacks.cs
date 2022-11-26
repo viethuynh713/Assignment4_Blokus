@@ -1,3 +1,4 @@
+
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -13,6 +14,24 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject m_roomUIPrefab;
     [SerializeField] private Transform m_roomParent;
 
+private void Start() {
+    if(PhotonNetwork.IsConnected)
+    {
+        m_LobbyPnl.SetActive(true);
+        m_InitPnl.SetActive(false);
+        m_NameIpF.text = PhotonNetwork.LocalPlayer.NickName;
+        
+        var myColor = -1;
+        ExitGames.Client.Photon.Hashtable hash = new ExitGames.Client.Photon.Hashtable();
+        hash.Add("MyColor", myColor);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+    }
+    else
+    {
+        m_LobbyPnl.SetActive(false);
+        m_InitPnl.SetActive(true);
+    }
+}
     private Dictionary<string, GameObject> listRoom = new Dictionary<string, GameObject>();
     public void Play()
     {
@@ -25,7 +44,10 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     {
         m_LoadingPnl.SetActive(false);
         Debug.Log("Connect successful");
+    if(PhotonNetwork.IsConnected)
+    {
         PhotonNetwork.LocalPlayer.NickName = m_NameIpF.text;
+    }
         PhotonNetwork.JoinLobby();
         Debug.Log("Hello "+PhotonNetwork.LocalPlayer.NickName);
     }
@@ -71,7 +93,11 @@ public class NetworkCallBacks : MonoBehaviourPunCallbacks
     public override void OnCreatedRoom()
     {
         Debug.Log("Create Room successful");
-        PhotonNetwork.LoadLevel("Main");
+        PhotonNetwork.LoadLevel("Main_Viet");
+    }
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("Main_Viet");
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {

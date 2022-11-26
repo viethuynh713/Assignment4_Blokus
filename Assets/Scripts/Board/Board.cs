@@ -1,12 +1,7 @@
-using Photon.Pun.Demo.Procedural;
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 
 public class Board : MonoBehaviour
 {
@@ -22,20 +17,7 @@ public class Board : MonoBehaviour
     List<List<BrickColor>> boardLogic;
     public List<List<BrickColor>> BoardLogic { get => boardLogic; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        size = 20;
-        initMap();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    void initMap()
+    public void initMap()
     {
         for (int i = -size / 2; i < size / 2; i++)
         {

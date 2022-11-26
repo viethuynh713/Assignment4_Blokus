@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
+    public static GameUI instance; 
     private List<GameObject> playerPanelList;
 
     [SerializeField] private Image playerPanelSample;
@@ -13,16 +16,16 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Color darkColor;
 
     // Start is called before the first frame update
+    private void Awake() {
+        instance = this;
+    }
     void Start()
     {
         playerPanelList = new List<GameObject>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public void initPlayerPanelList(int nPlayer)
     {
@@ -52,10 +55,17 @@ public class GameUI : MonoBehaviour
     }
 
     public void printResult(List<int> rank)
+
     {
         for (int i = 0; i < playerPanelList.Count; i++)
         {
             playerPanelList[i].transform.GetChild(1).gameObject.GetComponent<Text>().text = rank[i].ToString();
         }
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadSceneAsync("Loading");
     }
 }
