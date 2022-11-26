@@ -10,14 +10,16 @@ public class PlayerUI : MonoBehaviour
     public UnityEngine.UI.Image brickImage;
     public bool IsHost = false;
     public int index;
+    public bool IsBot;
 
-    public void SetInfos(string name, BrickColor color, bool isHost = false)
+    public void SetInfos(string name, BrickColor color, bool isHost = false, bool isBot = false)
     {
         nameTxt.text = name;
         playerColor = color;
         brickImage.color = _getColor(color);
         this.index = (int)color;
         IsHost = isHost;
+        IsBot = isBot;
     }
 
     private Color _getColor(BrickColor color)

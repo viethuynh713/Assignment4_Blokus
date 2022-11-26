@@ -17,14 +17,7 @@ public class Board : MonoBehaviour
     List<List<BrickColor>> boardLogic;
     public List<List<BrickColor>> BoardLogic { get => boardLogic; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        size = 20;
-        initMap();
-    }
-
-    void initMap()
+    public void initMap()
     {
         for (int i = -size / 2; i < size / 2; i++)
         {

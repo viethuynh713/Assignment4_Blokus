@@ -29,7 +29,8 @@ public class RoomControl : MonoBehaviour
     {
         if(PhotonNetwork.IsMasterClient)
         {
-        Debug.Log("Playyyyyyyy");
+            Debug.Log("Playyyyyyyy");
+            GameManager.instance.StartGameUI(roomNetwork._listPlayerUIEnable.Count);
         }
         
     }

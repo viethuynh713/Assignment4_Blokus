@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
 {
+    public static GameUI instance; 
     private List<GameObject> playerPanelList;
 
     [SerializeField] private Image playerPanelSample;
@@ -15,16 +16,16 @@ public class GameUI : MonoBehaviour
     [SerializeField] private Color darkColor;
 
     // Start is called before the first frame update
+    private void Awake() {
+        instance = this;
+    }
     void Start()
     {
         playerPanelList = new List<GameObject>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public void initPlayerPanelList(int nPlayer)
     {

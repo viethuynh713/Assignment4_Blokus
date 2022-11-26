@@ -11,7 +11,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
     [SerializeField]
     private PlayerUI[] _listPlayerUIDisable;
 
-    private Dictionary<string, PlayerUI>
+    public Dictionary<string, PlayerUI>
         _listPlayerUIEnable = new Dictionary<string, PlayerUI>();
 
     [SerializeField]
@@ -32,8 +32,8 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
                 .Add(PhotonNetwork.LocalPlayer.NickName,
                 _listPlayerUIDisable[numOfPlayer]);
         }
+        GameManager.instance.playerColor = (BrickColor)numOfPlayer;
     }
-
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         var numOfPlayer = _listPlayerUIEnable.Count;
@@ -72,7 +72,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
     {
         _listPlayerUIDisable[index].gameObject.SetActive(true);
         _listPlayerUIDisable[index]
-            .SetInfos(namePlayer, (BrickColor) index, false);
+            .SetInfos(namePlayer, (BrickColor) index, false,true);
         _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
     }
 
@@ -87,4 +87,5 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
 
         }
     }
+    
 }

@@ -1,3 +1,4 @@
+
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
@@ -19,6 +20,11 @@ private void Start() {
         m_LobbyPnl.SetActive(true);
         m_InitPnl.SetActive(false);
         m_NameIpF.text = PhotonNetwork.LocalPlayer.NickName;
+        
+        var myColor = -1;
+        ExitGames.Client.Photon.Hashtable hash = new ExitGames.Client.Photon.Hashtable();
+        hash.Add("MyColor", myColor);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
     }
     else
     {

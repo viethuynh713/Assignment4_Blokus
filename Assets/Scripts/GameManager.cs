@@ -13,17 +13,20 @@ public class GameManager : MonoBehaviour
     public GameState State = GameState.INIT;
 
     [SerializeField] private Grid _mainGrid;
-    [SerializeField] private int nPlayer = 4;
+    [SerializeField] private int nPlayer = 0;
     [SerializeField] private string playerID;
-    [SerializeField] private BrickColor playerColor; // get from server
+    public BrickColor playerColor; // get from server
     [SerializeField] private GameObject playerSample;
     [SerializeField] private List<GameObject> ListBricks;
     [SerializeField] private List<Vector2> brickPosOnFieldList;
     [SerializeField] private List<Sprite> tileSpriteList;
 
     [SerializeField] private Board m_boardGame;
-
+    [SerializeField] private PhotonView view;
     List<BrickColor> colorList;
+
+    [SerializeField] private RoomNetwork _roomNetwork;
+    
 
     private void Awake()
     {
@@ -32,27 +35,68 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         colorList = new List<BrickColor>();
-        BrickColor[] colorListSample = new BrickColor[4] { BrickColor.BLUE, BrickColor.YELLOW, BrickColor.GREEN, BrickColor.RED };
-        for (int i = 0; i < nPlayer; i++)
+        // BrickColor[] colorListSample = new BrickColor[4] { BrickColor.BLUE, BrickColor.YELLOW, BrickColor.GREEN, BrickColor.RED };
+        // for (int i = 0; i < nPlayer; i++)
+        // {
+        //     colorList.Add(colorListSample[i]);
+        // }
+        // foreach (BrickColor iColor in colorList)
+        // {
+        //     Debug.Log(iColor);
+        //     GameObject player = Instantiate(playerSample);
+        //     player.transform.SetParent(transform, false);
+        //     player.GetComponent<BUPlayer>().init(iColor, playerColor, !(playerColor == iColor));
+        //     player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
+        //     BlokusPlayers.Add(player);
+        // }
+        // FindObjectOfType<GameUI>().initPlayerPanelList(nPlayer);
+        // turn = 0;
+        // BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
+    }
+    public void StartGameUI(int i)
+    {
+        view.RPC("StartGame",RpcTarget.All,i);
+    }
+    [PunRPC]
+    public void StartGame(int numOfPlayer)
+    {
+        // Init board
+        nPlayer = numOfPlayer;
+        m_boardGame.size = GetBoardSize(nPlayer);
+        m_boardGame.initMap();
+
+        // Init Player
+        foreach (var item in _roomNetwork._listPlayerUIEnable)
         {
-            colorList.Add(colorListSample[i]);
-        }
-        foreach (BrickColor iColor in colorList)
-        {
-            Debug.Log(iColor);
+            colorList.Add((BrickColor)item.Value.index);
+            
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
-            player.GetComponent<BUPlayer>().init(iColor, playerColor, !(playerColor == iColor));
-            player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
+            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, (BrickColor)item.Value.index, item.Value.IsBot);
+            player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)item.Value.index], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
+
         }
-        FindObjectOfType<GameUI>().initPlayerPanelList(nPlayer);
+
+
+        // Init UI
+        GameUI.instance.initPlayerPanelList(nPlayer);
         turn = 0;
         BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
+        
     }
-    private void Update()
+    public int GetBoardSize(int i)
     {
-
+        switch (i)
+        {
+            case 4:
+                return 20;            
+            case 3:
+                return 16;
+            case 2:
+                return 12;
+        }
+        return 0;
     }
     [PunRPC]
     public void SwitchPlayer()
