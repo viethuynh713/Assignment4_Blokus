@@ -8,7 +8,6 @@ using UnityEngine.Tilemaps;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    private const int SIZE = 20;
     private int turn;
     public List<GameObject> BlokusPlayers = new List<GameObject>();
     public GameState State = GameState.INIT;
@@ -21,6 +20,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameObject> ListBricks;
     [SerializeField] private List<Vector2> brickPosOnFieldList;
     [SerializeField] private List<Sprite> tileSpriteList;
+
+    [SerializeField] private Board m_boardGame;
 
     List<BrickColor> colorList;
 
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
         }
         foreach (BrickColor iColor in colorList)
         {
+            Debug.Log(iColor);
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
             player.GetComponent<BUPlayer>().init(iColor, playerColor, !(playerColor == iColor));

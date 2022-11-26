@@ -13,6 +13,7 @@ public enum BotLevel
 
 public class RoomControl : MonoBehaviour
 {
+    [SerializeField] RoomNetwork roomNetwork;
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -21,14 +22,15 @@ public class RoomControl : MonoBehaviour
 
     public void AddBot(int level)
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("Add bot " + (BotLevel) level);
-        }
+        roomNetwork.AddBot((BotLevel)level);
     }
 
     public void PlayGame()
     {
+        if(PhotonNetwork.IsMasterClient)
+        {
         Debug.Log("Playyyyyyyy");
+        }
+        
     }
 }

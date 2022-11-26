@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour
@@ -52,10 +54,17 @@ public class GameUI : MonoBehaviour
     }
 
     public void printResult(List<int> rank)
+
     {
         for (int i = 0; i < playerPanelList.Count; i++)
         {
             playerPanelList[i].transform.GetChild(1).gameObject.GetComponent<Text>().text = rank[i].ToString();
         }
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadSceneAsync("Loading");
     }
 }

@@ -1,53 +1,90 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Photon.Pun;
+using UnityEngine;
 
 public class RoomNetwork : MonoBehaviourPunCallbacks
 {
-    
-    [SerializeField] private Transform m_ParentTrans;
-    [SerializeField]private PlayerUI[] _listPlayerUIDisable;
-    private Dictionary<string,PlayerUI> _listPlayerUIEnable = new Dictionary<string, PlayerUI>();
-    private void Awake() {
+    [SerializeField]
+    private Transform m_ParentTrans;
 
-    }
-    private void Start() {
-        var numOfPlayer = PhotonNetwork.CurrentRoom.PlayerCount -1;
-        if(PhotonNetwork.IsMasterClient)
+    [SerializeField]
+    private PlayerUI[] _listPlayerUIDisable;
+
+    private Dictionary<string, PlayerUI>
+        _listPlayerUIEnable = new Dictionary<string, PlayerUI>();
+
+    [SerializeField]
+    PhotonView photonView;
+
+
+    private void Start()
+    {
+        var numOfPlayer = _listPlayerUIEnable.Count;
+        if (PhotonNetwork.IsMasterClient)
         {
             _listPlayerUIDisable[numOfPlayer].gameObject.SetActive(true);
-            _listPlayerUIDisable[numOfPlayer].SetInfos(PhotonNetwork.LocalPlayer.NickName,(BrickColor)(numOfPlayer+1),true);
-            _listPlayerUIEnable.Add(PhotonNetwork.LocalPlayer.NickName,_listPlayerUIDisable[numOfPlayer]);
-            
-        }
-        else
-        {
-            _listPlayerUIDisable[numOfPlayer].gameObject.SetActive(true);
-            _listPlayerUIDisable[numOfPlayer].SetInfos(PhotonNetwork.LocalPlayer.NickName,(BrickColor)(numOfPlayer+1),false);
-            _listPlayerUIEnable.Add(PhotonNetwork.LocalPlayer.NickName,_listPlayerUIDisable[numOfPlayer]);
+            _listPlayerUIDisable[numOfPlayer]
+                .SetInfos(PhotonNetwork.LocalPlayer.NickName,
+                (BrickColor) numOfPlayer,
+                true);
+            _listPlayerUIEnable
+                .Add(PhotonNetwork.LocalPlayer.NickName,
+                _listPlayerUIDisable[numOfPlayer]);
         }
     }
+
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-         var numOfPlayer = PhotonNetwork.CurrentRoom.PlayerCount -1;
+        var numOfPlayer = _listPlayerUIEnable.Count;
 
-            _listPlayerUIDisable[numOfPlayer].gameObject.SetActive(true);
-            _listPlayerUIDisable[numOfPlayer].SetInfos(PhotonNetwork.LocalPlayer.NickName,(BrickColor)(numOfPlayer+1),false);
-            _listPlayerUIEnable.Add(PhotonNetwork.LocalPlayer.NickName,_listPlayerUIDisable[numOfPlayer]);
-        
+        _listPlayerUIDisable[numOfPlayer].gameObject.SetActive(true);
+        _listPlayerUIDisable[numOfPlayer]
+            .SetInfos(newPlayer.NickName, (BrickColor) numOfPlayer, false);
+        Debug.Log(newPlayer.NickName);
+        _listPlayerUIEnable
+            .Add(newPlayer.NickName, _listPlayerUIDisable[numOfPlayer]);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            foreach (var p in _listPlayerUIEnable)
+            {
+                photonView.RPC("DisplayUI", newPlayer, p.Value.index, p.Key);
+            }
+        }
     }
+
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
-        // foreach(var item in _listPlayerUI)
-        // {
-        //     if(item.GetComponent<PlayerUI>().nameTxt.text == otherPlayer.NickName)
-        //     {
-        //         _listPlayerUI.Remove(item);
-        //         Destroy(item.gameObject);
-        //         break;
-        //     }
-        // }
+        foreach (var item in _listPlayerUIEnable)
+        {
+            if (item.Key == otherPlayer.NickName)
+            {
+                _listPlayerUIEnable.Remove(item.Key);
+                item.Value.gameObject.SetActive(false);
+                break;
+            }
+        }
     }
 
+    [PunRPC]
+    public void DisplayUI(int index, string namePlayer)
+    {
+        _listPlayerUIDisable[index].gameObject.SetActive(true);
+        _listPlayerUIDisable[index]
+            .SetInfos(namePlayer, (BrickColor) index, false);
+        _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
+    }
+
+    public void AddBot(BotLevel level)
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            var numOfPlayer = _listPlayerUIEnable.Count;
+            if(numOfPlayer > 3)return;
+            photonView.RPC("DisplayUI", RpcTarget.All, numOfPlayer, "Bot"+ Random.Range(0,99)+ level);
+ 
+
+        }
+    }
 }

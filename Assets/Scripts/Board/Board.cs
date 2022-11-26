@@ -1,12 +1,7 @@
-using Photon.Pun.Demo.Procedural;
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
 
 public class Board : MonoBehaviour
 {
@@ -27,12 +22,6 @@ public class Board : MonoBehaviour
     {
         size = 20;
         initMap();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void initMap()

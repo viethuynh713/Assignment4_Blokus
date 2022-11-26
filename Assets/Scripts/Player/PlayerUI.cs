@@ -9,12 +9,14 @@ public class PlayerUI : MonoBehaviour
     public BrickColor playerColor;
     public UnityEngine.UI.Image brickImage;
     public bool IsHost = false;
+    public int index;
 
     public void SetInfos(string name, BrickColor color, bool isHost = false)
     {
         nameTxt.text = name;
         playerColor = color;
         brickImage.color = _getColor(color);
+        this.index = (int)color;
         IsHost = isHost;
     }
 
