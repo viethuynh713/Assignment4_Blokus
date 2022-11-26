@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
-            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, (BrickColor)item.Value.index, item.Value.IsBot);
+            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, item.Value.name, "abc123", item.Value.IsBot);
             player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)item.Value.index], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
 
