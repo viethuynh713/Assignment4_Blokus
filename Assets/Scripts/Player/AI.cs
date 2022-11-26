@@ -81,18 +81,18 @@ public class AI : MonoBehaviour
     public void play()
     {
         board = FindObjectOfType<Board>().BoardLogic;
-        ListBricks = GetComponent<Player>().ListBricks;
+        ListBricks = GetComponent<BUPlayer>().ListBricks;
         colorList = FindObjectOfType<GameManager>().getPlayerColorList();
         int depth = 2;
         Move move = calcMove(depth, color, board, new Move(), depth);
         if (move.isNull())
         {
-            GetComponent<Player>().pass();
+            GetComponent<BUPlayer>().pass();
         }
         else
         {
             boardComponent.placeBrickByAI(move.brick, move.pos, color);
-            GetComponent<Player>().removeBrick(move.brick);
+            GetComponent<BUPlayer>().removeBrick(move.brick);
         }
     }
 

@@ -40,13 +40,13 @@ public class GameManager : MonoBehaviour
         {
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
-            player.GetComponent<Player>().init(iColor, playerColor, !(playerColor == iColor));
-            player.GetComponent<Player>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
+            player.GetComponent<BUPlayer>().init(iColor, playerColor, !(playerColor == iColor));
+            player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
         }
         FindObjectOfType<GameUI>().initPlayerPanelList(nPlayer);
         turn = 0;
-        BlokusPlayers[turn].GetComponent<Player>().Play();
+        BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
     }
     private void Update()
     {
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
             }
             Debug.Log("SwitchPlayer: " + turn);
             FindObjectOfType<GameUI>().switchPlayerUI(turn);
-            BlokusPlayers[turn].GetComponent<Player>().Play();
+            BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
         }
     }
 
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject player in BlokusPlayers)
         {
-            if (player.GetComponent<Player>().Color == playerColor)
+            if (player.GetComponent<BUPlayer>().Color == playerColor)
             {
                 return player;
             }
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     {
         if (isMyTurn())
         {
-            getMyPlayer().GetComponent<Player>().pass();
+            getMyPlayer().GetComponent<BUPlayer>().pass();
         }
     }
 
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject blokusPlayer in BlokusPlayers)
         {
-            if (!blokusPlayer.GetComponent<Player>().IsPassed)
+            if (!blokusPlayer.GetComponent<BUPlayer>().IsPassed)
             {
                 return false;
             }
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < BlokusPlayers.Count; i++)
         {
             order.Add(i);
-            pointList.Add(BlokusPlayers[i].GetComponent<Player>().calcPoint());
+            pointList.Add(BlokusPlayers[i].GetComponent<BUPlayer>().calcPoint());
         }
         // sort point
         bool hasResult = false;

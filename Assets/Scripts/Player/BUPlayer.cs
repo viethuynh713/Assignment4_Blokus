@@ -6,7 +6,7 @@ using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class BUPlayer : MonoBehaviour
 {
     public string ID;
 
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     private bool isAI;
     public bool IsAI { get => isAI; set { isAI = value; } }
 
-    public Player(string iD, string name, BrickColor color)
+    public BUPlayer(string iD, string name, BrickColor color)
     {
         ID = iD;
         Name = name;
