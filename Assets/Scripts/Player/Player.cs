@@ -41,11 +41,12 @@ public class Player : MonoBehaviour
         
     }
 
-    public void init(BrickColor color, BrickColor myColor, bool isAI)
+    public void init(BrickColor color, string name, string myName, bool isAI)
     {
         this.color = color;
+        this.name = name;
         isPassed = false;
-        if (myColor == color)
+        if (myName == name)
         {
             isMyPlayer = true;
         }

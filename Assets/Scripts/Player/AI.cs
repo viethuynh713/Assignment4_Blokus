@@ -60,6 +60,7 @@ public class AI : MonoBehaviour
     BrickColor color;
     Board boardComponent;
     List<BrickColor> colorList;
+    public int depth = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +84,6 @@ public class AI : MonoBehaviour
         board = FindObjectOfType<Board>().BoardLogic;
         ListBricks = GetComponent<Player>().ListBricks;
         colorList = FindObjectOfType<GameManager>().getPlayerColorList();
-        int depth = 2;
         Move move = calcMove(depth, color, board, new Move(), depth);
         if (move.isNull())
         {
