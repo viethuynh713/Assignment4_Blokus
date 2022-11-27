@@ -19,6 +19,7 @@ public class Board : MonoBehaviour
 
     public void initMap()
     {
+        size = FindObjectOfType<GameManager>().GetBoardSize();
         for (int i = -size / 2; i < size / 2; i++)
         {
             for (int j = -size / 2; j < size / 2; j++)

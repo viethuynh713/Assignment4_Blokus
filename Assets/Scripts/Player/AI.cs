@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
+using static AI;
 
 public class AI : MonoBehaviour
 {
@@ -12,11 +13,31 @@ public class AI : MonoBehaviour
         public GameObject brick;
         public Vector2Int pos;
         public int point;
-        public Move()
+        public Move(bool isMaximizingPlayer)
         {
             brick = null;
             pos = FindObjectOfType<Constant>().nullVector;
-            point = FindObjectOfType<Constant>().negativeInf;
+            if (isMaximizingPlayer)
+            {
+                point = FindObjectOfType<Constant>().negativeInf;
+            }
+            else
+            {
+                point = FindObjectOfType<Constant>().positiveInf;
+            }
+        }
+        public Move(GameObject brick, Vector2Int pos, bool isMaximizingPlayer)
+        {
+            this.brick = brick;
+            this.pos = pos;
+            if (isMaximizingPlayer)
+            {
+                point = FindObjectOfType<Constant>().negativeInf;
+            }
+            else
+            {
+                point = FindObjectOfType<Constant>().positiveInf;
+            }
         }
         public Move(Move move)
         {
@@ -28,30 +49,26 @@ public class AI : MonoBehaviour
         {
             return brick == null;
         }
-        public void checkPoint(GameObject brick, Vector2Int pos, int point, bool isMax)
+        public void getOptimize(Move move, bool isMaximizingPlayer)
         {
-            if (isMax)
+            if (isMaximizingPlayer)
             {
-                if (brick == null || point >= this.point)
+                if (brick == null || move.point >= point)
                 {
-                    this.brick = brick;
-                    this.pos = pos;
-                    this.point = point;
+                    brick = move.brick;
+                    pos = move.pos;
+                    point = move.point;
                 }
             }
             else
             {
-                if (brick == null || point <= this.point)
+                if (brick == null || move.point <= point)
                 {
-                    this.brick = brick;
-                    this.pos = pos;
-                    this.point = point;
+                    brick = move.brick;
+                    pos = move.pos;
+                    point = move.point;
                 }
             }
-        }
-        public void checkPoint(Move move, bool isMax)
-        {
-            checkPoint(move.brick, move.pos, move.point, isMax);
         }
     }
 
@@ -84,7 +101,7 @@ public class AI : MonoBehaviour
         board = FindObjectOfType<Board>().BoardLogic;
         ListBricks = GetComponent<BUPlayer>().ListBricks;
         colorList = FindObjectOfType<GameManager>().getPlayerColorList();
-        Move move = calcMove(depth, color, board, new Move(), depth);
+        Move move = alphaBeta(new List<Move>(), depth, new Move(true), new Move(false), color, board);
         if (move.isNull())
         {
             GetComponent<BUPlayer>().pass();
@@ -95,13 +112,20 @@ public class AI : MonoBehaviour
             GetComponent<BUPlayer>().removeBrick(move.brick);
         }
     }
-
-    Move calcMove(int depth, BrickColor color, List<List<BrickColor>> board, Move mainMove, int h)
+    Move alphaBeta(List<Move> moveList, int depth, Move alpha, Move beta, BrickColor color, List<List<BrickColor>> boardClone)
     {
-        Move move = new Move();
-        for (int i = 1; i < board.Count - 1; i++)
+        if (depth == 0)
         {
-            for (int j = 1; j < board[0].Count - 1; j++)
+            Move res = new Move(moveList[0]);
+            res.point = calcPoint(boardClone);
+            return res;
+        }
+
+        bool isMaximizingPlayer = this.color == color;
+        Move value = new Move(isMaximizingPlayer);
+        for (int i = 1; i < boardClone.Count - 1; i++)
+        {
+            for (int j = 1; j < boardClone[0].Count - 1; j++)
             {
                 if (boardComponent.isTilePlacedValid(new Vector2Int(i, j), color))
                 {
@@ -112,25 +136,26 @@ public class AI : MonoBehaviour
                             Vector2Int brickPos = new Vector2Int(i, j) - boardComponent.worldToGridPositon(tile.localPosition, true);
                             if (boardComponent.isBrickPlacedValidOnLogic(brick, brickPos, color))
                             {
-                                List<List<BrickColor>> boardClone = placeBrickToTest(brick, brickPos, board);
-                                if (depth > 1)
+                                List<List<BrickColor>> subBoardClone = placeBrickToTest(brick, brickPos, boardClone);
+                                Move move = new Move(brick, brickPos, isMaximizingPlayer);
+                                List<Move> subMoveList = new List<Move>(moveList);
+                                subMoveList.Add(move);
+                                value.getOptimize(alphaBeta(subMoveList, depth - 1, alpha, beta, getNextColor(color), subBoardClone), isMaximizingPlayer);
+                                if (isMaximizingPlayer)
                                 {
-                                    if (depth == h)
+                                    if (value.point >= beta.point)
                                     {
-                                        mainMove.brick = brick;
-                                        mainMove.pos = brickPos;
+                                        break;
                                     }
-                                    Move subMove = calcMove(depth - 1, getNextColor(color), boardClone, mainMove, h);
-                                    move.checkPoint(subMove, color == this.color);
+                                    alpha.getOptimize(value, isMaximizingPlayer);
                                 }
                                 else
                                 {
-                                    move.checkPoint(brick, brickPos, calcPoint(boardClone), color == this.color);
-                                    if (depth == h)
+                                    if (value.point <= alpha.point)
                                     {
-                                        mainMove.brick = move.brick;
-                                        mainMove.pos = move.pos;
+                                        break;
                                     }
+                                    beta.getOptimize(value, isMaximizingPlayer);
                                 }
                             }
                         }
@@ -138,7 +163,7 @@ public class AI : MonoBehaviour
                 }
             }
         }
-        return mainMove;
+        return value;
     }
 
     List<List<BrickColor>> placeBrickToTest(GameObject brick, Vector2Int brickPos, List<List<BrickColor>> board)

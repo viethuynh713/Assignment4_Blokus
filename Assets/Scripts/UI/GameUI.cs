@@ -55,7 +55,6 @@ public class GameUI : MonoBehaviour
     }
 
     public void printResult(List<int> rank)
-
     {
         for (int i = 0; i < playerPanelList.Count; i++)
         {

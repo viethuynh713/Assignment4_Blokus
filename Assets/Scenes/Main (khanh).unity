@@ -4566,6 +4566,7 @@ MonoBehaviour:
   _mainGrid: {fileID: 862651673}
   nPlayer: 4
   playerID: eqsfdda13423
+  playerName: abc123
   playerColor: 2
   playerSample: {fileID: 3641182176850843491, guid: e385f7cf422a4284da3d22675aed63a0, type: 3}
   ListBricks:
@@ -4651,6 +4652,7 @@ MonoBehaviour:
   greenBrick: {fileID: 21300000, guid: cf798e3f1266a33439dd3ebf3ef8c708, type: 3}
   yellowBrick: {fileID: 21300000, guid: 08561845957b245459109705b8ad8b20, type: 3}
   redBrick: {fileID: 21300000, guid: 973b4729d8f12d547ad672ab18082953, type: 3}
+  positiveInf: 99999999
   negativeInf: -99999999
   nullVector: {x: -99999999, y: -99999999}
 --- !u!1001 &1884522047

@@ -62,6 +62,26 @@ public class BUPlayer : MonoBehaviour
         }
     }
 
+    public void init(BrickColor color, BrickColor myColor, bool isAI)
+    {
+        this.color = color;
+        isPassed = false;
+        if (myColor == color)
+        {
+            isMyPlayer = true;
+        }
+        else
+        {
+            isMyPlayer = false;
+        }
+        this.isAI = isAI;
+        if (this.isAI)
+        {
+            this.AddComponent<AI>();
+            GetComponent<AI>().init(color);
+        }
+    }
+
     public void Play()
     {
         IsMyTurn = true;
@@ -103,7 +123,6 @@ public class BUPlayer : MonoBehaviour
             }
             ListBricks.Add(brick);
         }
-        Debug.Log("ListBricks: " + ListBricks.Count + ", " + color);
     }
 
     public void switchToNextTurn()

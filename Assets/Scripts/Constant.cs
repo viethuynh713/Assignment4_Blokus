@@ -8,6 +8,7 @@ public class Constant : MonoBehaviour
     public Sprite greenBrick;
     public Sprite yellowBrick;
     public Sprite redBrick;
+    public int positiveInf = 99999999;
     public int negativeInf = -99999999;
     public Vector2Int nullVector = new Vector2Int(-99999999, -99999999);
 
