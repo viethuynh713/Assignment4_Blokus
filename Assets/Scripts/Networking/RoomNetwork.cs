@@ -72,7 +72,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
     {
         _listPlayerUIDisable[index].gameObject.SetActive(true);
         _listPlayerUIDisable[index]
-            .SetInfos(namePlayer, (BrickColor) index, false,isBot);
+            .SetInfos(namePlayer, (BrickColor) index, false,isBot); // add bot level here
         _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
         
     }

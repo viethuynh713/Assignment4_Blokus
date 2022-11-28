@@ -90,10 +90,11 @@ public class AI : MonoBehaviour
 
     }
 
-    public void init(BrickColor color)
+    public void init(BrickColor color, int depth)
     {
         boardComponent = FindObjectOfType<Board>();
         this.color = color;
+        this.depth = depth;
     }
 
     public void play()
