@@ -32,7 +32,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
                 .Add(PhotonNetwork.LocalPlayer.NickName,
                 _listPlayerUIDisable[numOfPlayer]);
         }
-        GameManager.instance.playerColor = (BrickColor)numOfPlayer;
+        GameManager.instance.playerColor = (BrickColor)(PhotonNetwork.CurrentRoom.PlayerCount - 1);
     }
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
@@ -74,6 +74,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
         _listPlayerUIDisable[index]
             .SetInfos(namePlayer, (BrickColor) index, false,isBot);
         _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
+        
     }
 
     public void AddBot(BotLevel level)
