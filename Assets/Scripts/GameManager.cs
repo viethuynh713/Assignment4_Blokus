@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
 
         turn = 0;
         BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
+        this.State = GameState.PLAYING;
         
     }
     public int GetBoardSize()
@@ -120,7 +121,7 @@ public class GameManager : MonoBehaviour
 
     public bool isMyTurn()
     {
-        // ???
+        if(State == GameState.PAUSE)return false;
         if (colorList[turn] == playerColor)
         {
             return true;
@@ -223,24 +224,30 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<GameUI>().printResult(result);
     }
     #region Pause and Resume
+    [SerializeField] GameObject m_SettingPnl;
+    [SerializeField] GameObject m_PausePnl;    private int oldTurn = 0;
     public void PauseGame()
     {
         view.RPC("SendPauseGame",RpcTarget.All);
     }
     public void ResumeGame()
     {
-
+        view.RPC("SendResumeGame",RpcTarget.All);
     }
     [PunRPC]
     // [SerializeField] Gam
     public void SendPauseGame()
     {
-
+        m_PausePnl.SetActive(true);
+        m_SettingPnl.SetActive(false);
+        State = GameState.PAUSE;
     }
     [PunRPC]
     public void SendResumeGame()
     {
-
+        m_PausePnl.SetActive(false);
+        m_SettingPnl.SetActive(true);
+        State = GameState.PLAYING;
     }
     #endregion
 }
