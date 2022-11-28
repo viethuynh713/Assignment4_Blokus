@@ -93,11 +93,11 @@ private void Start() {
     public override void OnCreatedRoom()
     {
         Debug.Log("Create Room successful");
-        PhotonNetwork.LoadLevel("Main_Viet");
+        PhotonNetwork.LoadLevel("Main (khanh)");
     }
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("Main_Viet");
+        PhotonNetwork.LoadLevel("Main (khanh)");
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {

@@ -45,6 +45,7 @@ public class BUPlayer : MonoBehaviour
     {
         this.color = color;
         this.name = name;
+        this.Name = name;
         isPassed = false;
         if (myName == name)
         {
@@ -91,7 +92,9 @@ public class BUPlayer : MonoBehaviour
             {
                 GetComponent<AI>().play();
             }
-            switchToNextTurn();
+            IsMyTurn = false;
+            GameManager.instance.SwitchPlayer();
+            
         }
         else if (isPassed)
         {
@@ -128,14 +131,9 @@ public class BUPlayer : MonoBehaviour
     public void switchToNextTurn()
     {
         IsMyTurn = false;
-        StartCoroutine(WaitForSwitchToNextTurn());
+        GameManager.instance.SwitchTurn();
     }
     
-    IEnumerator WaitForSwitchToNextTurn()
-    {
-        yield return new WaitForSeconds(1);
-        FindObjectOfType<GameManager>().SwitchPlayer();
-    }
 
     public void pass()
     {

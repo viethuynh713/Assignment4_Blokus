@@ -37,7 +37,7 @@ public class Brick : MonoBehaviour
                 if (isSelected)
                 {
                     if (FindObjectOfType<Board>().placeBrick(gameObject, Camera.main.ScreenToWorldPoint(Input.mousePosition))) {
-                        BUPlayer myPlayerComponent = FindObjectOfType<GameManager>().getMyPlayer().GetComponent<BUPlayer>();
+                        BUPlayer myPlayerComponent = FindObjectOfType<GameManager>().getMyPlayer(GameManager.instance.playerColor).GetComponent<BUPlayer>();
                         myPlayerComponent.switchToNextTurn();
                         myPlayerComponent.removeBrick(gameObject);
                         Destroy(gameObject);

@@ -34,7 +34,7 @@ public class GameUI : MonoBehaviour
             GameObject playerPanel = Instantiate(playerPanelSample.gameObject);
             playerPanel.transform.SetParent(transform, false);
             playerPanel.GetComponent<Image>().color = darkColor;
-            playerPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = "Player " + (i + 1).ToString();
+            playerPanel.transform.GetChild(0).gameObject.GetComponent<Text>().text = GameManager.instance.BlokusPlayers[i].GetComponent<BUPlayer>().Name;
             playerPanel.transform.position = new Vector2(765 + 135 * i, 635);
             playerPanelList.Add(playerPanel);
         }

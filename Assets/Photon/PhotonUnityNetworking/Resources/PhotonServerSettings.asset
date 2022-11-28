@@ -43,6 +43,10 @@ MonoBehaviour:
   - SwitchPlayer
   - DisplayUI
   - StartGame
+  - OnEnablePanel
+  - endGame
+  - SendPassTurn
+  - UpdateBoard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

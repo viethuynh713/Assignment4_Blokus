@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -13,7 +14,7 @@ public class Board : MonoBehaviour
     [SerializeField] private TileBase _blueBrick;
     [SerializeField] private TileBase _greenBrick;
     [SerializeField] private TileBase _yellowBrick;
-
+    [SerializeField] private PhotonView view;
     List<List<BrickColor>> boardLogic;
     public List<List<BrickColor>> BoardLogic { get => boardLogic; }
 
@@ -57,12 +58,21 @@ public class Board : MonoBehaviour
                     _boardMap.SetTile(tilePosOnGrid, getTileBase(tileSprite));
                     Vector2Int tilePosOnGridLogic = gridViewPosToGridLogicPos((Vector2Int)tilePosOnGrid);
                     boardLogic[tilePosOnGridLogic.x][tilePosOnGridLogic.y] = getColor(tileSprite);
+                    view.RPC("UpdateBoard",RpcTarget.Others,tilePosOnGridLogic.x,tilePosOnGridLogic.y,(int)GameManager.instance.playerColor);
                 }
                 return true;
             }
         }
         return false;
     }
+    [PunRPC]
+    public void UpdateBoard(int x, int y, int color)
+    {
+        boardLogic[x][y] = (BrickColor)color ;
+        Vector3Int brickPosOnGrid = (Vector3Int)gridLogicPosToGridViewPos(new Vector2Int(x,y));
+         _boardMap.SetTile(brickPosOnGrid, getTileBase((BrickColor)color));
+    }
+    
 
     public void placeBrickByAI(GameObject brick, Vector2Int logicPos, BrickColor color)
     {
@@ -75,6 +85,7 @@ public class Board : MonoBehaviour
             _boardMap.SetTile(tilePosOnGrid, getTileBase(color));
             Vector2Int tilePosOnLogic = logicPos + tilePosByBrickOnGrid;
             boardLogic[tilePosOnLogic.x][tilePosOnLogic.y] = color;
+              //GameManager.instance.view.RPC("UpdateBoard",RpcTarget.Others,new Vector3 (tilePosOnGridLogic.x,tilePosOnGridLogic.y,0),(int)GameManager.instance.playerColor)
         }
     }
 

@@ -924,7 +924,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 353739923}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2097906006}
+        m_TargetAssemblyTypeName: RoomControl, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &353739923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2571,7 +2583,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841773314}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -2642,6 +2654,7 @@ GameObject:
   - component: {fileID: 862651674}
   - component: {fileID: 862651673}
   - component: {fileID: 862651675}
+  - component: {fileID: 862651676}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -2695,6 +2708,29 @@ MonoBehaviour:
   _blueBrick: {fileID: 11400000, guid: 7cb7627c5f61a024788b391bddc9337e, type: 2}
   _greenBrick: {fileID: 11400000, guid: fdbee55dd8ddd7a42a91c84d562917a2, type: 2}
   _yellowBrick: {fileID: 11400000, guid: 8671aa9275baa064d9a60ad2fe2ed81c, type: 2}
+  view: {fileID: 862651676}
+--- !u!114 &862651676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862651672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &926677415
 GameObject:
   m_ObjectHideFlags: 0
@@ -4542,6 +4578,7 @@ GameObject:
   - component: {fileID: 1869161071}
   - component: {fileID: 1869161070}
   - component: {fileID: 1869161072}
+  - component: {fileID: 1869161073}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4619,8 +4656,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: cf798e3f1266a33439dd3ebf3ef8c708, type: 3}
   - {fileID: 21300000, guid: 973b4729d8f12d547ad672ab18082953, type: 3}
   m_boardGame: {fileID: 862651675}
-  view: {fileID: 0}
-  _roomNetwork: {fileID: 0}
+  view: {fileID: 1869161073}
+  _roomNetwork: {fileID: 2097906007}
 --- !u!4 &1869161071
 Transform:
   m_ObjectHideFlags: 0
@@ -4655,6 +4692,28 @@ MonoBehaviour:
   positiveInf: 99999999
   negativeInf: -99999999
   nullVector: {x: -99999999, y: -99999999}
+--- !u!114 &1869161073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869161069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 2
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1884522047
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5193,6 +5252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomNetwork: {fileID: 2097906007}
+  passBtn: {fileID: 1999761749}
 --- !u!114 &2097906007
 MonoBehaviour:
   m_ObjectHideFlags: 0

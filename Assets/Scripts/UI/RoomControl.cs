@@ -14,6 +14,7 @@ public enum BotLevel
 public class RoomControl : MonoBehaviour
 {
     [SerializeField] RoomNetwork roomNetwork;
+    [SerializeField] GameObject passBtn;
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -31,7 +32,14 @@ public class RoomControl : MonoBehaviour
         {
             Debug.Log("Playyyyyyyy");
             GameManager.instance.StartGameUI(roomNetwork._listPlayerUIEnable.Count);
+            roomNetwork.photonView.RPC("OnEnablePanel",RpcTarget.All);
         }
         
     }
+    [PunRPC]
+    private void OnEnablePanel() {
+        this.gameObject.SetActive(false);
+        passBtn.SetActive(true);
+    }
+    
 }

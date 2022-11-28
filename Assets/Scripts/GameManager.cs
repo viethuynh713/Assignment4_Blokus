@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    private int turn;
+    public int turn;
     public List<GameObject> BlokusPlayers = new List<GameObject>();
     public GameState State = GameState.INIT;
 
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Sprite> tileSpriteList;
 
     [SerializeField] private Board m_boardGame;
-    [SerializeField] private PhotonView view;
+    [SerializeField] public PhotonView view;
     List<BrickColor> colorList;
 
     [SerializeField] private RoomNetwork _roomNetwork;
@@ -41,19 +41,7 @@ public class GameManager : MonoBehaviour
         {
             colorList.Add(colorListSample[i]);
         }
-        //m_boardGame.initMap();
-        //foreach (BrickColor iColor in colorList)
-        //{
-        //    Debug.Log(iColor);
-        //    GameObject player = Instantiate(playerSample);
-        //    player.transform.SetParent(transform, false);
-        //    player.GetComponent<BUPlayer>().init(iColor, playerColor, !(playerColor == iColor));
-        //    player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)iColor], _mainGrid.cellSize.x);
-        //    BlokusPlayers.Add(player);
-        //}
-        //FindObjectOfType<GameUI>().initPlayerPanelList(nPlayer);
-        //turn = 0;
-        //BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
+
     }
     public void StartGameUI(int i)
     {
@@ -66,23 +54,24 @@ public class GameManager : MonoBehaviour
         nPlayer = numOfPlayer;
         m_boardGame.size = GetBoardSize();
         m_boardGame.initMap();
-
+        playerName = PhotonNetwork.LocalPlayer.NickName;
         // Init Player
         foreach (var item in _roomNetwork._listPlayerUIEnable)
         {
             colorList.Add((BrickColor)item.Value.index);
-            
+            Debug.Log(playerName+" :"+item.Value.IsBot);
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
-            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, item.Value.name, playerName, item.Value.IsBot); // the third param is the name client entered
+            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, item.Value.nameTxt.text, playerName, item.Value.IsBot); // the third param is the name client entered
             player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)item.Value.index], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
 
         }
-
+        
 
         // Init UI
         GameUI.instance.initPlayerPanelList(nPlayer);
+
         turn = 0;
         BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
         
@@ -99,6 +88,11 @@ public class GameManager : MonoBehaviour
                 return 12;
         }
         return 0;
+    }
+    public void SwitchTurn()
+    {
+        
+        view.RPC("SwitchPlayer",RpcTarget.All);
     }
     [PunRPC]
     public void SwitchPlayer()
@@ -130,11 +124,11 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public GameObject getMyPlayer()
+    public GameObject getMyPlayer(BrickColor color)
     {
         foreach (GameObject player in BlokusPlayers)
         {
-            if (player.GetComponent<BUPlayer>().Color == playerColor)
+            if (player.GetComponent<BUPlayer>().Color == color)
             {
                 return player;
             }
@@ -151,10 +145,16 @@ public class GameManager : MonoBehaviour
     {
         if (isMyTurn())
         {
-            getMyPlayer().GetComponent<BUPlayer>().pass();
+            int i = (int)playerColor;
+            view.RPC("SendPassTurn",RpcTarget.All,i);
         }
     }
-
+    [PunRPC]
+    public void SendPassTurn(int color)
+    {
+        var p =  getMyPlayer((BrickColor)color).GetComponent<BUPlayer>();
+            p.pass();
+    }
     public bool isEndGame()
     {
         foreach (GameObject blokusPlayer in BlokusPlayers)
@@ -166,7 +166,7 @@ public class GameManager : MonoBehaviour
         }
         return true;
     }
-
+    
     public void endGame()
     {
         // get point

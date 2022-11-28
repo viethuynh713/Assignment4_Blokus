@@ -27,7 +27,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
             _listPlayerUIDisable[numOfPlayer]
                 .SetInfos(PhotonNetwork.LocalPlayer.NickName,
                 (BrickColor) numOfPlayer,
-                true);
+                true,false);
             _listPlayerUIEnable
                 .Add(PhotonNetwork.LocalPlayer.NickName,
                 _listPlayerUIDisable[numOfPlayer]);
@@ -40,7 +40,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
 
         _listPlayerUIDisable[numOfPlayer].gameObject.SetActive(true);
         _listPlayerUIDisable[numOfPlayer]
-            .SetInfos(newPlayer.NickName, (BrickColor) numOfPlayer, false);
+            .SetInfos(newPlayer.NickName, (BrickColor) numOfPlayer, false,false);
         Debug.Log(newPlayer.NickName);
         _listPlayerUIEnable
             .Add(newPlayer.NickName, _listPlayerUIDisable[numOfPlayer]);
@@ -49,7 +49,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
         {
             foreach (var p in _listPlayerUIEnable)
             {
-                photonView.RPC("DisplayUI", newPlayer, p.Value.index, p.Key);
+                photonView.RPC("DisplayUI", newPlayer, p.Value.index, p.Key,p.Value.IsBot);
             }
         }
     }
@@ -68,11 +68,11 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DisplayUI(int index, string namePlayer)
+    public void DisplayUI(int index, string namePlayer,bool isBot)
     {
         _listPlayerUIDisable[index].gameObject.SetActive(true);
         _listPlayerUIDisable[index]
-            .SetInfos(namePlayer, (BrickColor) index, false,true);
+            .SetInfos(namePlayer, (BrickColor) index, false,isBot);
         _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
     }
 
@@ -82,7 +82,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
         {
             var numOfPlayer = _listPlayerUIEnable.Count;
             if(numOfPlayer > 3)return;
-            photonView.RPC("DisplayUI", RpcTarget.All, numOfPlayer, "Bot"+ Random.Range(0,99)+ level);
+            photonView.RPC("DisplayUI", RpcTarget.All, numOfPlayer, "Bot"+ Random.Range(0,99)+ level,true);
  
 
         }

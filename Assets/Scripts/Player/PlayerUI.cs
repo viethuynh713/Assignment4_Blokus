@@ -12,7 +12,7 @@ public class PlayerUI : MonoBehaviour
     public int index;
     public bool IsBot;
 
-    public void SetInfos(string name, BrickColor color, bool isHost = false, bool isBot = false)
+    public void SetInfos(string name, BrickColor color, bool isHost, bool isBot )
     {
         nameTxt.text = name;
         playerColor = color;
