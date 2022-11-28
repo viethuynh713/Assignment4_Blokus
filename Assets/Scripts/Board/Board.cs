@@ -38,10 +38,16 @@ public class Board : MonoBehaviour
             }
             boardLogic.Add(row);
         }
+        // init begin position for logic map
         boardLogic[0][0] = BrickColor.RED;
         boardLogic[0][size + 1] = BrickColor.BLUE;
         boardLogic[size + 1][0] = BrickColor.GREEN;
         boardLogic[size + 1][size + 1] = BrickColor.YELLOW;
+        // init begin position for tile map
+        _boardMap.SetTile(new Vector3Int(-size / 2 - 1, -size / 2 - 1), _redBrick);
+        _boardMap.SetTile(new Vector3Int(-size / 2 - 1, size / 2), _blueBrick);
+        _boardMap.SetTile(new Vector3Int(size / 2, -size / 2 - 1), _greenBrick);
+        _boardMap.SetTile(new Vector3Int(size / 2, size / 2), _yellowBrick);
     }
 
     public bool placeBrick(GameObject brick, Vector2 worldPosition)

@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
     }
     public void SwitchTurn()
     {
-        
         view.RPC("SwitchPlayer",RpcTarget.All);
     }
     [PunRPC]
@@ -108,7 +107,6 @@ public class GameManager : MonoBehaviour
             {
                 turn = 0;
             }
-            Debug.Log("SwitchPlayer: " + turn);
             FindObjectOfType<GameUI>().switchPlayerUI(turn);
             BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
         }
@@ -184,7 +182,7 @@ public class GameManager : MonoBehaviour
             hasResult = true;
             for (int i = 0; i < order.Count - 1; i++)
             {
-                if (pointList[order[i]] < pointList[order[i + 1]])
+                if (pointList[order[i]] > pointList[order[i + 1]])
                 {
                     hasResult = false;
                     int t = order[i];
