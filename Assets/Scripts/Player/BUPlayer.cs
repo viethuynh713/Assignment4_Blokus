@@ -41,7 +41,7 @@ public class BUPlayer : MonoBehaviour
         
     }
 
-    public void init(BrickColor color, string name, string myName, bool isAI)
+    public void init(BrickColor color, string name, string myName, bool isAI, int depth = 1)
     {
         this.color = color;
         this.name = name;
@@ -59,27 +59,7 @@ public class BUPlayer : MonoBehaviour
         if (this.isAI)
         {
             this.AddComponent<AI>();
-            GetComponent<AI>().init(color);
-        }
-    }
-
-    public void init(BrickColor color, BrickColor myColor, bool isAI)
-    {
-        this.color = color;
-        isPassed = false;
-        if (myColor == color)
-        {
-            isMyPlayer = true;
-        }
-        else
-        {
-            isMyPlayer = false;
-        }
-        this.isAI = isAI;
-        if (this.isAI)
-        {
-            this.AddComponent<AI>();
-            GetComponent<AI>().init(color);
+            GetComponent<AI>().init(color, depth);
         }
     }
 
