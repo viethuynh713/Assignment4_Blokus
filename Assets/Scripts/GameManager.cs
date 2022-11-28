@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
             {
                 turn = 0;
             }
-            Debug.Log("SwitchPlayer: " + turn);
+            Debug.Log("SwitchPlayer: " + BlokusPlayers[turn].GetComponent<BUPlayer>().Name);
             FindObjectOfType<GameUI>().switchPlayerUI(turn);
             BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
         }
@@ -146,14 +146,18 @@ public class GameManager : MonoBehaviour
         if (isMyTurn())
         {
             int i = (int)playerColor;
+            
             view.RPC("SendPassTurn",RpcTarget.All,i);
+            var p =  getMyPlayer(playerColor).GetComponent<BUPlayer>();
+            p.pass();
         }
     }
     [PunRPC]
     public void SendPassTurn(int color)
     {
+        Debug.Log((BrickColor)color);
         var p =  getMyPlayer((BrickColor)color).GetComponent<BUPlayer>();
-            p.pass();
+        p.IsPassed = true;
     }
     public bool isEndGame()
     {
