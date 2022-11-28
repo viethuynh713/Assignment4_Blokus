@@ -109,6 +109,11 @@ public class GameManager : MonoBehaviour
             }
             Debug.Log("SwitchPlayer: " + BlokusPlayers[turn].GetComponent<BUPlayer>().Name);
             FindObjectOfType<GameUI>().switchPlayerUI(turn);
+            if(BlokusPlayers[turn].GetComponent<BUPlayer>().IsPassed)
+            {
+                SwitchPlayer();
+                return;
+            }
             BlokusPlayers[turn].GetComponent<BUPlayer>().Play();
         }
     }
@@ -217,4 +222,25 @@ public class GameManager : MonoBehaviour
         }
         FindObjectOfType<GameUI>().printResult(result);
     }
+    #region Pause and Resume
+    public void PauseGame()
+    {
+        view.RPC("SendPauseGame",RpcTarget.All);
+    }
+    public void ResumeGame()
+    {
+
+    }
+    [PunRPC]
+    // [SerializeField] Gam
+    public void SendPauseGame()
+    {
+
+    }
+    [PunRPC]
+    public void SendResumeGame()
+    {
+
+    }
+    #endregion
 }
