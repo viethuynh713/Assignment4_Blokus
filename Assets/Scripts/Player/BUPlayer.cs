@@ -98,8 +98,9 @@ public class BUPlayer : MonoBehaviour
         }
         else if (isPassed)
         {
-            Debug.Log("Switch next pass");
-            switchToNextTurn();
+            // Debug.Log("Switch next pass");
+            // switchToNextTurn();
+            //GameManager.instance.turn ++;
         }
     }
 
@@ -161,4 +162,5 @@ public class BUPlayer : MonoBehaviour
         }
         return point;
     }
+
 }
