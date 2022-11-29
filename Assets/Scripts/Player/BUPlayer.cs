@@ -41,7 +41,7 @@ public class BUPlayer : MonoBehaviour
         
     }
 
-    public void init(BrickColor color, string name, string myName, bool isAI, int depth = 1)
+    public void init(BrickColor color, string name, string myName, bool isAI, BotLevel level = 0)
     {
         this.color = color;
         this.name = name;
@@ -59,7 +59,7 @@ public class BUPlayer : MonoBehaviour
         if (this.isAI)
         {
             this.AddComponent<AI>();
-            GetComponent<AI>().init(color, depth);
+            GetComponent<AI>().init(color, (int)level + 1);
         }
     }
 
@@ -135,12 +135,7 @@ public class BUPlayer : MonoBehaviour
 
     public int calcPoint()
     {
-        int point = 0;
-        foreach (GameObject brick in ListBricks)
-        {
-            point += brick.transform.childCount;
-        }
-        return point;
+        return FindObjectOfType<Board>().calcPoint(color);
     }
 
 }

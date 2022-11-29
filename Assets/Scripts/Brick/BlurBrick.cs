@@ -19,9 +19,9 @@ public class BlurBrick : MonoBehaviour
 
     public void blur()
     {
-        foreach (Transform t in transform)
-        {
-            t.GetComponent<SpriteRenderer>().color.WithAlpha(100);
-        }
+        //foreach (Transform t in transform)
+        //{
+        //    t.GetComponent<SpriteRenderer>().color.WithAlpha(100);
+        //}
     }
 }

@@ -8,7 +8,8 @@ public enum BotLevel
 {
     EASY,
     MEDIUM,
-    HARD
+    HARD,
+    NULL
 }
 
 public class RoomControl : MonoBehaviour

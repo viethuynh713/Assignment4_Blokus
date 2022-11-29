@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
             Debug.Log(playerName+" :"+item.Value.IsBot);
             GameObject player = Instantiate(playerSample);
             player.transform.SetParent(transform, false);
-            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, item.Value.nameTxt.text, playerName, item.Value.IsBot); // the third param is the name client entered
+            player.GetComponent<BUPlayer>().init((BrickColor)item.Value.index, item.Value.nameTxt.text, playerName, item.Value.IsBot, item.Value.botLevel); // the third param is the name client entered
             player.GetComponent<BUPlayer>().initBrickOnField(ListBricks, brickPosOnFieldList, tileSpriteList[(int)item.Value.index], _mainGrid.cellSize.x);
             BlokusPlayers.Add(player);
 
@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
             hasResult = true;
             for (int i = 0; i < order.Count - 1; i++)
             {
-                if (pointList[order[i]] > pointList[order[i + 1]])
+                if (pointList[order[i]] < pointList[order[i + 1]])
                 {
                     hasResult = false;
                     int t = order[i];

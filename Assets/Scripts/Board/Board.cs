@@ -203,6 +203,22 @@ public class Board : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
+    public int calcPoint(BrickColor color)
+    {
+        int point = 0;
+        for (int i = 1; i < boardLogic.Count - 1; i++)
+        {
+            for (int j = 1; j < boardLogic[0].Count - 1; j++)
+            {
+                if (boardLogic[i][j] == color)
+                {
+                    point++;
+                }
+            }
+        }
+        return point;
+    }
+
     public BrickColor getColor(Sprite sprite)
     {
         if (sprite == FindObjectOfType<Constant>().blueBrick)

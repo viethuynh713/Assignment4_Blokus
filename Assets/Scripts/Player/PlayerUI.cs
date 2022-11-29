@@ -11,8 +11,9 @@ public class PlayerUI : MonoBehaviour
     public bool IsHost = false;
     public int index;
     public bool IsBot;
+    public BotLevel botLevel;
 
-    public void SetInfos(string name, BrickColor color, bool isHost, bool isBot )
+    public void SetInfos(string name, BrickColor color, bool isHost, bool isBot, BotLevel botLevel = BotLevel.NULL)
     {
         nameTxt.text = name;
         playerColor = color;
@@ -20,6 +21,7 @@ public class PlayerUI : MonoBehaviour
         this.index = (int)color;
         IsHost = isHost;
         IsBot = isBot;
+        this.botLevel = botLevel;
     }
 
     private Color _getColor(BrickColor color)

@@ -49,7 +49,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
         {
             foreach (var p in _listPlayerUIEnable)
             {
-                photonView.RPC("DisplayUI", newPlayer, p.Value.index, p.Key,p.Value.IsBot);
+                photonView.RPC("DisplayUI", newPlayer, p.Value.index, p.Key,p.Value.IsBot, p.Value.botLevel);
             }
         }
     }
@@ -68,11 +68,11 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DisplayUI(int index, string namePlayer,bool isBot)
+    public void DisplayUI(int index, string namePlayer,bool isBot, BotLevel botLevel = BotLevel.NULL)
     {
         _listPlayerUIDisable[index].gameObject.SetActive(true);
         _listPlayerUIDisable[index]
-            .SetInfos(namePlayer, (BrickColor) index, false,isBot); // add bot level here
+            .SetInfos(namePlayer, (BrickColor) index, false,isBot, botLevel); // add bot level here
         _listPlayerUIEnable.Add(namePlayer, _listPlayerUIDisable[index]);
         
     }
@@ -83,7 +83,7 @@ public class RoomNetwork : MonoBehaviourPunCallbacks
         {
             var numOfPlayer = _listPlayerUIEnable.Count;
             if(numOfPlayer > 3)return;
-            photonView.RPC("DisplayUI", RpcTarget.All, numOfPlayer, "Bot"+ Random.Range(0,99)+ level,true);
+            photonView.RPC("DisplayUI", RpcTarget.All, numOfPlayer, "Bot"+ Random.Range(0,99)+ level,true, level);
  
 
         }
